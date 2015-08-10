@@ -32,6 +32,7 @@ public class FileHandler {
             return lines;
 
         } catch (FileNotFoundException e) {
+            System.out.println("File cannot be loaded! " + e.toString());
         } catch (IOException e) {
         } finally {
             if (br != null) {
@@ -58,7 +59,7 @@ public class FileHandler {
                 textData = textData.replaceAll("\n", System.lineSeparator());
                 outputStreamWriter.write(textData);
             }
-            System.out.println("INFO: data has been written to "+filePath);
+            System.out.println("INFO: data has been written to " + filePath);
             return true;
 
         } catch (IOException e) {
@@ -66,8 +67,8 @@ public class FileHandler {
 
         }
     }
-    
-     public static boolean writeListToFile(String filePath, List<String> inputList) {
+
+    public static boolean writeListToFile(String filePath, List<String> inputList) {
         try {
             File file = new File(filePath);
 
@@ -75,10 +76,10 @@ public class FileHandler {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            
+
             StringBuilder stringBuilder = new StringBuilder();
-           
-            for(String t:inputList){
+
+            for (String t : inputList) {
                 stringBuilder.append(t).append("\n");
             }
             String textData = stringBuilder.toString();
@@ -88,12 +89,53 @@ public class FileHandler {
                 textData = textData.replaceAll("\n", System.lineSeparator());
                 outputStreamWriter.write(textData);
             }
-            System.out.println("INFO: list has been written to "+filePath);
+            System.out.println("INFO: list has been written to " + filePath);
             return true;
 
         } catch (IOException e) {
             return false;
+        }
+    }
 
+//    public static void main(String[] args) {
+//        String filePath = "D:\\crawl\\test\\_01_Liberation War :? >Documents.txt";
+//
+//        String fileName = getFileNameFromPathString(filePath);
+//
+//        if (!validateFileName(fileName)) {
+//            System.out.println("0000given> " + fileName);
+//            System.out.println("corrected> " + getValidFileName(fileName));
+//        } else {
+//            System.out.println("valid> " + fileName);
+//        }
+//
+//    }
+
+    public static boolean validateFileName(String fileName) {
+        fileName = fileName.trim();
+        if (fileName.length() > 0) {
+            return fileName.matches("^[^.\\\\/:*?\"<>|]?[^\\\\/:*?\"<>|]*");
+        } else {
+            throw new IllegalStateException(
+                    "File Name " + fileName + " results in a empty fileName!");
+        }
+    }
+
+    public static String getValidFileName(String fileName) {
+        String newFileName = fileName.replaceAll("[.\\\\/:*?\"<>|]?[\\\\/:*?\"<>|]*", "");
+        if (newFileName.length() == 0) {
+            throw new IllegalStateException(
+                    "File Name " + fileName + " results in a empty fileName!");
+        }
+        return newFileName;
+    }
+
+    public static String getFileNameFromPathString(String filePath) {
+        try {
+            int idx = filePath.replaceAll("\\\\", "/").lastIndexOf("/");
+            return idx >= 0 ? filePath.substring(idx + 1) : filePath;
+        } catch (Exception e) {
+            throw e;
         }
     }
 }
